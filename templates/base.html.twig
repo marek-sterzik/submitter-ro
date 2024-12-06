@@ -11,6 +11,22 @@
         {% endblock %}
     </head>
     <body>
+        <nav>
+            {% if user is not null %}
+                <strong>{{ user.name }}</strong>
+                {% if user.isTeacher() %}
+                    [UČITEL]
+                {% elseif user.isStudent() %}
+                    [STUDENT]
+                {% else %}
+                    [NEZNÁMÝ]
+                {% endif %}
+                (<a href="{{ path("logout") }}">odhlásit</a>)
+            {% else %}
+                Nepřihlášen
+                (<a href="{{ path("login") }}">přihlásit</a>)
+            {% endif %}
+        </nav>
         {% block body %}{% endblock %}
     </body>
 </html>

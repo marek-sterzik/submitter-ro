@@ -1,16 +1,9 @@
 {% extends "base.html.twig" %}
 {% block body %}
     <div  class="telo">
-        <h1>Milý studente!</h1>
-        <p>
-            Toto je vývojové prostředí pro předmět PVA. Právě se Ti jej podařilo kompletně rozběhnout. Gratuluji. ☺
-        </p>
-        <p>
-            S tímto prostředím se budeme potkávat po celý rok a proto je dobré, aby ses s ním trochu seznámil.
-            Rozhlédni se po aplikaci a zkus si s ní trochu pohrát. Prozkoumej útroby. Zjisti co slouží k čemu.
-            Klidně si zkus aplikaci modifikovat a upravit ke svému obrazu. Většina provedených změn by měla mít
-            okamžitý efekt.
-        </p>
+        {% if user is not null %}
+        {{ user.prettyPrint()|raw }}
+        {% endif %}
         <div class="ptacek-kontejner">
             <object class="ptacek" type="image/svg+xml" data="{{ asset('svg/ptacek.svg') }}"></object>
             <div id="prepinac">
