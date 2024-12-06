@@ -67,6 +67,9 @@
     "slevomat/coding-standard": {
         "version": "7.0.2"
     },
+    "spsostrov/libsso-symfony": {
+        "version": "v0.1.0"
+    },
     "squizlabs/php_codesniffer": {
         "version": "3.0",
         "recipe": {

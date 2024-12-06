@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "ae0b158bfcc7875677a40c8600db9771",
+    "content-hash": "35659aee13f1b47de6a9fae42ac8d5e1",
     "packages": [
         {
             "name": "composer/package-versions-deprecated",
@@ -1997,6 +1997,90 @@
                 "source": "https://github.com/php-fig/log/tree/3.0.2"
             },
             "time": "2024-09-11T13:17:53+00:00"
+        },
+        {
+            "name": "spsostrov/libsso",
+            "version": "v1.5.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/marek-sterzik/spsostrov-libsso.git",
+                "reference": "3772573f31c8a2f34dd2ec76650abfc2b98d1901"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/marek-sterzik/spsostrov-libsso/zipball/3772573f31c8a2f34dd2ec76650abfc2b98d1901",
+                "reference": "3772573f31c8a2f34dd2ec76650abfc2b98d1901",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=7.4"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "SPSOstrov\\SSO\\": "lib/classes"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Marek Sterzik",
+                    "email": "sterzik@spsostrov.cz"
+                }
+            ],
+            "description": "The SPŠ Ostrov school's SSO library",
+            "homepage": "https://github.com/marek-sterzik/spsostrov-libsso",
+            "support": {
+                "issues": "https://github.com/marek-sterzik/spsostrov-libsso/issues",
+                "source": "https://github.com/marek-sterzik/spsostrov-libsso/tree/v1.5.0"
+            },
+            "time": "2024-12-02T23:22:27+00:00"
+        },
+        {
+            "name": "spsostrov/libsso-symfony",
+            "version": "v0.1.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/marek-sterzik/spsostrov-libsso-symfony.git",
+                "reference": "77078b90eb1e3244042656b8a3972d7bc049afe9"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/marek-sterzik/spsostrov-libsso-symfony/zipball/77078b90eb1e3244042656b8a3972d7bc049afe9",
+                "reference": "77078b90eb1e3244042656b8a3972d7bc049afe9",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=7.4",
+                "spsostrov/libsso": ">=1.5",
+                "symfony/security-bundle": ">=6.2"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "SPSOstrov\\SSOBundle\\": "src"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Marek Sterzik",
+                    "email": "sterzik@spsostrov.cz"
+                }
+            ],
+            "description": "The SPŠ Ostrov school's SSO library - Symfony bridge",
+            "homepage": "https://github.com/marek-sterzik/spsostrov-libsso-symfony",
+            "support": {
+                "issues": "https://github.com/marek-sterzik/spsostrov-libsso-symfony/issues",
+                "source": "https://github.com/marek-sterzik/spsostrov-libsso-symfony/tree/v0.1.0"
+            },
+            "time": "2024-12-05T18:48:47+00:00"
         },
         {
             "name": "symfony/asset",
@@ -8459,7 +8543,7 @@
     ],
     "aliases": [],
     "minimum-stability": "stable",
-    "stability-flags": [],
+    "stability-flags": {},
     "prefer-stable": false,
     "prefer-lowest": false,
     "platform": {
@@ -8467,6 +8551,6 @@
         "ext-ctype": "*",
         "ext-iconv": "*"
     },
-    "platform-dev": [],
+    "platform-dev": {},
     "plugin-api-version": "2.6.0"
 }
