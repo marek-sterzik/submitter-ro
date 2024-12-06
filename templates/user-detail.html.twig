@@ -1,0 +1,6 @@
+{% extends "base.html.twig" %}
+{% block body %}
+    {% if user is not null %}
+        {{ user.prettyPrint()|raw }}
+    {% endif %}
+{% endblock %}

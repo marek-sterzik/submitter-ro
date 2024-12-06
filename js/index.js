@@ -1,2 +1,1 @@
-import "./ptacek.js"
-
+console.log("loaded")
