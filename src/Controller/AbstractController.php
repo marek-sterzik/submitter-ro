@@ -19,7 +19,7 @@ class AbstractController extends AbstractControllerBase
         return $this;
     }
 
-    protected function getDefaultParameters()
+    protected function getDefaultParameters(): array
     {
         return [
             "menu" => $this->menuGenerator->generateMenu(),
@@ -39,6 +39,6 @@ class AbstractController extends AbstractControllerBase
         ?Response $response = null
     ): Response {
         $parameters = array_merge($this->getDefaultParameters(), $parameters);
-        return parent::render($view, $parameters, $response);        
+        return parent::render($view, $parameters, $response);
     }
 }

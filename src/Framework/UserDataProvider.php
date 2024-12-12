@@ -15,7 +15,7 @@ class UserDataProvider implements SSOUserDataProviderInterface, SSORoleDeciderIn
     {
     }
 
-    public function getUserData(SSOUser $user)
+    public function getUserData(SSOUser $user): mixed
     {
         $userEntity = $this->userRepository->findOneBy(["username" => $user->getLogin()]);
         $changed = false;

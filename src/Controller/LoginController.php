@@ -11,21 +11,21 @@ class LoginController extends AbstractController
     #[Route("/login", name: "login")]
     public function login(Request $request): Response
     {
-	return $this->getRedirectResponse($request);
+        return $this->getRedirectResponse($request);
     }
 
     #[Route("/logout", name: "logout")]
     public function logout(Request $request): Response
     {
-	return $this->getRedirectResponse($request);
+        return $this->getRedirectResponse($request);
     }
 
     private function getRedirectResponse(Request $request): Response
     {
         $url = $request->query->get("back");
-	if (!is_string($url)) {
-	    return $this->redirectToRoute('main');
-	}
-	return $this->redirect($url);
+        if (!is_string($url)) {
+            return $this->redirectToRoute('main');
+        }
+        return $this->redirect($url);
     }
 }
