@@ -18,9 +18,13 @@
         <nav>
             {% if user is not null %}
                 <a href="{{ path("user_detail") }}">{{ user.name }}</a>
-                {% if user.isTeacher() %}
+                {% if is_granted('ROLE_SUPERADMIN') %}
+                    <span class="role role-admin">SUPERADMIN</span>
+                {% elseif is_granted('ROLE_ADMIN') %}
+                    <span class="role role-admin">ADMIN</span>
+                {% elseif is_granted('ROLE_TEACHER') %}
                     <span class="role role-teacher">UČITEL</span>
-                {% elseif user.isStudent() %}
+                {% elseif is_granted('ROLE_STUDENT') %}
                     <span class="role role-student">STUDENT</span>
                 {% else %}
                     <span class="role role-unknown">NEZNÁMÝ</span>

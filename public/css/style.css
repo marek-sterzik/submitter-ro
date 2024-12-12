@@ -8,8 +8,8 @@ nav {
     font-size: .8em;
 }
 nav span.role {
-    border-radius: .3em;
-    padding: .2em;
+    border-radius: .7em;
+    padding: .2em .5em;
     border: 1px solid #c0c0c0;
     font-size: .8em;
     box-shadow: 2px 2px 2px #80808020;
@@ -21,6 +21,8 @@ a:hover {text-decoration: underline;}
 nav span.role.role-teacher {background-color: #ffa0a0;}
 nav span.role.role-student {background-color: #c5f0d5;}
 nav span.role.role-unknown {background-color: white;}
+nav span.role.role-admin {background-color: red;}
+nav span.role.role-superadmin {background-color: red;}
 
 div.body {margin: auto; box-shadow: 3px 3px 3px #e0e0e0; border: 1px solid #f0f0f0; padding: 1em; max-width: 50em; background-color: white; }
 
