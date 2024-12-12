@@ -7,12 +7,22 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController as AbstractControllerBase;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
+use App\Framework\MenuGenerator;
 
 class AbstractController extends AbstractControllerBase
 {
+    private MenuGenerator $menuGenerator;
+
+    public function setMenuGenerator(MenuGenerator $menuGenerator): self
+    {
+        $this->menuGenerator = $menuGenerator;
+        return $this;
+    }
+
     protected function getDefaultParameters()
     {
         return [
+            "menu" => $this->menuGenerator->generateMenu(),
             "user" => $this->getUser(),
         ];
     }

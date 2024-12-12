@@ -1,0 +1,8 @@
+menu:
+  - name: home
+    route: main
+    roles: ['PUBLIC_ACCESS']
+  - name: adminer
+    route: app.adminer
+    roles: ["ROLE_SUPERADMIN"]
+    target_blank: true

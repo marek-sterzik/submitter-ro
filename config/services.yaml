@@ -12,6 +12,10 @@ services:
         autowire: true      # Automatically injects dependencies in your services.
         autoconfigure: true # Automatically registers your services as commands, event subscribers, etc.
 
+    _instanceof:
+        App\Controller\AbstractController:
+            calls:
+                - setMenuGenerator: ['@App\Framework\MenuGenerator']
     # makes classes in src/ available to be used as services
     # this creates a service per class whose id is the fully-qualified class name
     App\:
@@ -34,6 +38,9 @@ services:
         arguments:
             $assetBaseDir: '%kernel.project_dir%/public'
             $versionLinkWildCard: 'assets-v*'
+    App\Framework\MenuGenerator:
+        arguments:
+            $menuFile: '%kernel.project_dir%/config/menu.yaml'
     App\Controller\AdminerController:
         arguments:
             $databaseUrl: '%env(resolve:DATABASE_URL)%'
