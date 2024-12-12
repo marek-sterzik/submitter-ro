@@ -38,4 +38,3 @@ services:
         arguments:
             $databaseUrl: '%env(resolve:DATABASE_URL)%'
             $adminerBootFile: '%kernel.project_dir%/adminer/boot.php'
-            $adminerEnabled: '%env(default:defaultAdminerEnabled:bool:ADMINER_ENABLED)%'
