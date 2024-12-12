@@ -17,6 +17,11 @@ nav span.role {
 
 a {color: black; font-weight: bold; text-decoration: none;}
 a:hover {text-decoration: underline;}
+a[target="_blank"]::after {
+  content: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAoAAAAKCAYAAACNMs+9AAAAQElEQVR42qXKwQkAIAxDUUdxtO6/RBQkQZvSi8I/pL4BoGw/XPkh4XigPmsUgh0626AjRsgxHTkUThsG2T/sIlzdTsp52kSS1wAAAABJRU5ErkJggg==);
+  margin: 0 3px 0 5px;
+}
+
 
 nav span.role.role-teacher {background-color: #ffa0a0;}
 nav span.role.role-student {background-color: #c5f0d5;}
