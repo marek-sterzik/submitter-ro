@@ -10,12 +10,16 @@ use SPSOstrov\SSOBundle\SSOUser;
 use App\Repository\UserRepository;
 use Doctrine\ORM\EntityManagerInterface as EntityManager;
 use App\Entity\User;
+use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 
 class MenuGenerator
 {
     private array $menuTemplate;
-    public function __construct(private RequestStack $requestStack, string $menuFile)
-    {
+    public function __construct(
+        private RequestStack $requestStack,
+        private AuthorizationCheckerInterface $authorizationChecker,
+        string $menuFile
+    ) {
         $this->menuTemplate = Yaml::parseFile($menuFile)['menu'];
     }
 
@@ -24,7 +28,9 @@ class MenuGenerator
         $currentRoute = $this->requestStack->getCurrentRequest()->attributes->get('_route');
         $menu = [];
         foreach ($this->menuTemplate as $menuItem) {
-            $menu[] = $this->createMenuItem($menuItem, $currentRoute);
+            if ($this->granted($menuItem['roles'] ?? null)) {
+                $menu[] = $this->createMenuItem($menuItem, $currentRoute);
+            }
         }
         return $menu;
     }
@@ -37,5 +43,15 @@ class MenuGenerator
         $menuItem['actual'] = ($menuItem['route'] === $currentRoute) ? true : false;
 
         return $menuItem;
+    }
+
+    private function granted(?array $roles): bool
+    {
+        foreach ($roles as $role) {
+            if ($this->authorizationChecker->isGranted($role)) {
+                return true;
+            }
+        }
+        return false;
     }
 }
