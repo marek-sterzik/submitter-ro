@@ -29,11 +29,6 @@ class UserDataProvider implements SSOUserDataProviderInterface, SSORoleDeciderIn
             $changed = true;
         }
 
-        if ($userEntity->getName() !== $user->getName()) {
-            $userEntity->setName($user->getName());
-            $changed = true;
-        }
-
         if ($userEntity->isTeacher() !== $user->isTeacher()) {
             $userEntity->setTeacher($user->isTeacher());
             $changed = true;
