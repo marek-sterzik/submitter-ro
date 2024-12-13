@@ -47,6 +47,7 @@ class MenuGenerator
 
     private function granted(?array $roles): bool
     {
+        $roles = $roles ?? ['ROLE_USER'];
         foreach ($roles as $role) {
             if ($this->authorizationChecker->isGranted($role)) {
                 return true;

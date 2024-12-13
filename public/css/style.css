@@ -15,6 +15,10 @@ nav span.role {
     box-shadow: 2px 2px 2px #80808020;
 }
 
+menu li.actual a{
+  color: red;
+}
+
 a {color: black; font-weight: bold; text-decoration: none;}
 a:hover {text-decoration: underline;}
 a[target="_blank"]::after {

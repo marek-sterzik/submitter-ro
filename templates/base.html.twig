@@ -37,7 +37,9 @@
         </nav>
         <menu>
             {% for item in menu %}
-                <li{% if item.actual %} class="actual"{% endif %}><a href="{{ path(item.route) }}"{% if item.target_blank %} target="_blank"{% endif %}>{{ item.name }}</a></li>
+                <li{% if item.actual %} class="actual"{% endif %}>
+                    <a href="{{ path(item.route) }}"{% if item.target_blank %} target="_blank"{% endif %}>{{ item.name }}</a>
+                </li>
             {% endfor %}
         </menu>
         <div class="body">
