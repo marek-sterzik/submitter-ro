@@ -6,3 +6,7 @@ menu:
     route: app.adminer
     roles: ["ROLE_SUPERADMIN"]
     target_blank: true
+  - name: detail uživatele
+    route: user_detail
+    roles: ['ROLE_USER']
+    hidden: true

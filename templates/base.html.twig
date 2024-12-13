@@ -6,39 +6,49 @@
         {% block stylesheets %}
             <link rel="preconnect" href="https://fonts.googleapis.com">
             <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-            <link href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&display=swap"
-                rel="stylesheet">
+            <!-- link href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&display=swap"
+                rel="stylesheet" -->
+            <link href="{{ asset('bootstrap/bootstrap.min.css') }}" rel="stylesheet">
             <link rel="stylesheet" href="{{ asset('css/style.css') }}">
         {% endblock %}
         {% block javascripts %}
+            <script src="{{ asset('/bootstrap.bundle.min.js') }}"></script>
             <script src="{{ asset('js/main.js') }}"></script>
         {% endblock %}
     </head>
     <body>
-        <nav>
-            {% if user is not null %}
-                <a href="{{ path("user_detail") }}">{{ user.name }}</a>
-                {% if is_granted('ROLE_SUPERADMIN') %}
-                    <span class="role role-admin">SUPERADMIN</span>
-                {% elseif is_granted('ROLE_ADMIN') %}
-                    <span class="role role-admin">ADMIN</span>
-                {% elseif is_granted('ROLE_TEACHER') %}
-                    <span class="role role-teacher">UČITEL</span>
-                {% elseif is_granted('ROLE_STUDENT') %}
-                    <span class="role role-student">STUDENT</span>
-                {% else %}
-                    <span class="role role-unknown">NEZNÁMÝ</span>
-                {% endif %}
-                (<a href="{{ path("logout") }}">odhlásit</a>)
-            {% else %}
-                Nepřihlášen
-                (<a href="{{ path("login") }}">přihlásit</a>)
-            {% endif %}
+        <nav class="navbar bg-dark" data-bs-theme="dark">
+            <div class="container-fluid">
+                <a class="navbar-brand" href="{{ path('main')}}">submitter</a>
+                <div class="navbar-text pull-right">
+                    {% if user is not null %}
+                        <a href="{{ path("user_detail") }}">{{ user.name }}</a>
+                        {% if is_granted('ROLE_SUPERADMIN') %}
+                            <span class="badge bg-danger">superadmin</span>
+                        {% elseif is_granted('ROLE_ADMIN') %}
+                            <span class="badge bg-danger">admin</span>
+                        {% elseif is_granted('ROLE_TEACHER') %}
+                            <span class="badge bg-success">učitel</span>
+                        {% elseif is_granted('ROLE_STUDENT') %}
+                            <span class="badge bg-info">student</span>
+                        {% else %}
+                            <span class="badge bg-secondary">neznámý</span>
+                        {% endif %}
+                    {% else %}
+                        nepřihlášen
+                    {% endif %}
+                    {% if user is not null %}
+                        <a href="{{ path("logout") }}" class="btn btn-secondary btn-sm ms-3" role="button">odhlásit <i class="bi bi-arrow-right-square-fill"></i></a>
+                    {% else %}
+                        <a href="{{ path("login") }}" class="btn btn-secondary btn-sm ms-3" role="button"><i class="bi bi-arrow-right-square-fill"></i> přihlásit</a>
+                    {% endif %}
+                </div>
+            </div>
         </nav>
-        <menu>
+        <menu class="nav nav-tabs mb-3">
             {% for item in menu %}
-                <li{% if item.actual %} class="actual"{% endif %}>
-                    <a href="{{ path(item.route) }}"{% if item.target_blank %} target="_blank"{% endif %}>{{ item.name }}</a>
+                <li class="nav-item">
+                    <a class="nav-link{% if item.actual %} active{% endif %}" href="{{ path(item.route) }}"{% if item.target_blank %} target="_blank"{% endif %}>{{ item.name }}</a>
                 </li>
             {% endfor %}
         </menu>

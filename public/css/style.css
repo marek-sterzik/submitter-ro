@@ -1,41 +1,11 @@
-html, body {margin: 0; padding: 0; font-family: "Roboto", sans-serif;}
-nav {
-    background-color: #d2e8fc;
-    text-align: right;
-    padding: .8em;
-    margin: 0 0 .5em 0;
-    box-shadow: 3px 3px 3px #e0e0e0;
-    font-size: .8em;
-}
-nav span.role {
-    border-radius: .7em;
-    padding: .2em .5em;
-    border: 1px solid #c0c0c0;
-    font-size: .8em;
-    box-shadow: 2px 2px 2px #80808020;
-}
-
-menu li.actual a{
-  color: red;
-}
-
-a {color: black; font-weight: bold; text-decoration: none;}
-a:hover {text-decoration: underline;}
 a[target="_blank"]::after {
   content: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAoAAAAKCAYAAACNMs+9AAAAQElEQVR42qXKwQkAIAxDUUdxtO6/RBQkQZvSi8I/pL4BoGw/XPkh4XigPmsUgh0626AjRsgxHTkUThsG2T/sIlzdTsp52kSS1wAAAABJRU5ErkJggg==);
   margin: 0 3px 0 5px;
 }
 
+menu a.nav-link, menu a.nav-link:hover, menu a.nav-link:visited {color: var(--bs-nav-tabs-link-active-color);}
+menu a.nav-link:hover {background-color: #f0f0f0;}
 
-nav span.role.role-teacher {background-color: #ffa0a0;}
-nav span.role.role-student {background-color: #c5f0d5;}
-nav span.role.role-unknown {background-color: white;}
-nav span.role.role-admin {background-color: red;}
-nav span.role.role-superadmin {background-color: red;}
+table.sso_user_table {margin: 0 auto;}
 
-div.body {margin: auto; box-shadow: 3px 3px 3px #e0e0e0; border: 1px solid #f0f0f0; padding: 1em; max-width: 50em; background-color: white; }
-
-h1 {color: #800000; text-align: center; text-shadow: 2px 2px #e0e0e0;}
-p {text-indent: 1em; text-align: justify;}
-
-table.sso_user_table {margin: auto;}
+img.spsostrov-logo {display: block; margin: 5em auto; max-width: 70%;}

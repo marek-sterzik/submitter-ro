@@ -29,7 +29,10 @@ class MenuGenerator
         $menu = [];
         foreach ($this->menuTemplate as $menuItem) {
             if ($this->granted($menuItem['roles'] ?? null)) {
-                $menu[] = $this->createMenuItem($menuItem, $currentRoute);
+                $finalItem = $this->createMenuItem($menuItem, $currentRoute);
+                if (!$finalItem['hidden'] || $finalItem['actual']) {
+                    $menu[] = $this->createMenuItem($menuItem, $currentRoute);
+                }
             }
         }
         return $menu;
@@ -37,9 +40,8 @@ class MenuGenerator
 
     private function createMenuItem(array $menuItem, string $currentRoute): array
     {
-        if (!isset($menuItem['target_blank'])) {
-            $menuItem['target_blank'] = false;
-        }
+        $menuItem['hidden'] = $menuItem['hidden'] ?? false;
+        $menuItem['target_blank'] = $menuItem['target_blank'] ?? false;
         $menuItem['actual'] = ($menuItem['route'] === $currentRoute) ? true : false;
 
         return $menuItem;
