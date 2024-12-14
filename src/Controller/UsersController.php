@@ -4,8 +4,11 @@ namespace App\Controller;
 
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use Doctrine\ORM\QueryBuilder;
+use App\Entity\User;
+use App\Utility\Cell;
 
-class UsersController extends AbstractTableController
+class UsersController extends AbstractDbTableController
 {
     #[Route("/users", name: "users")]
     public function index(): Response
@@ -13,27 +16,28 @@ class UsersController extends AbstractTableController
         return $this->renderTable();
     }
 
-    protected function getItemCount(array $filterData): int
+    protected function getBaseQueryBuilder(array $filterData): QueryBuilder
     {
-        return 25;
+        return $this->getEntityManager()->getRepository(User::class)->createQueryBuilder('u');
     }
 
     protected function getHeader(array $filterData): array
     {
         return [
-            "username" => "Uživatelské jméno",
-            "name" => "Jméno",
+            "username" => "uživatelské jméno",
+            "name" => "jméno",
+            "roles" => "role",
+            "class" => "třída",
         ];
     }
 
-    protected function getData(int $page, int $pageSize, array $filterData): array
+    protected function recordToArray(mixed $user): array
     {
-        $from = $page * $pageSize;
-        $to = min($from + $pageSize, $this->getItemCount($filterData));
-        $data = [];
-        for ($i = $from; $i < $to; $i++) {
-            $data[] = ["username" => "john.doe." . ($i+1), "name" => "John Doe " . ($i+1)];
-        }
-        return $data;
+        assert($user instanceof User);
+        return [
+            "username" => $user->getUsername(),
+            "name" => $user->getName(),
+            "roles" => Cell::html($this->renderView('snippets/fundamental-roles.html.twig', ['fundamentalRoles' => $user->getFundamentalRoles()])),
+        ];
     }
 }

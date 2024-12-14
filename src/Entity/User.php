@@ -21,6 +21,9 @@ class User
 
     #[ORM\Column]
     private bool $teacher;
+    
+    #[ORM\Column(length: 16, nullable: true)]
+    private string $studentClass;
 
     #[ORM\Column(nullable: true)]
     private ?array $roles = null;
@@ -71,6 +74,23 @@ class User
         return $this;
     }
 
+    public function getStudentClass(): ?string
+    {
+        return $this->studentClass ?? null;
+    }
+
+    public function setStudentClass(?string $studentClass): static
+    {
+        $this->studentClass = $studentClass;
+
+        return $this;
+    }
+
+    public function isStudent(): bool
+    {
+        return $this->studentClass !== null;
+    }
+
     public function getRoles(): ?array
     {
         return $this->roles ?? null;
@@ -81,5 +101,31 @@ class User
         $this->roles = $roles;
 
         return $this;
+    }
+
+    public function getFundamentalRoles(): array
+    {
+        return [$this->getFundamentalRole()];
+    }
+
+    private function getFundamentalRole(): string
+    {
+        $testRoles = ['ROLE_SUPERADMIN', 'ROLE_ADMIN', 'ROLE_TEACHER'];
+        if ($this->roles !== null) {
+            foreach ($testRoles as $role) {
+                if (in_array($role, $this->roles)) {
+                    return $role;
+                }
+            }
+        }
+        if ($this->roles === null || in_array('ROLE_DEFAULT', $this->roles)) {
+            if ($this->isTeacher()) {
+                return 'ROLE_TEACHER';
+            }
+            if ($this->isStudent()) {
+                return 'ROLE_STUDENT';
+            }
+        }
+        return 'ROLE_OTHER';
     }
 }

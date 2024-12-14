@@ -1,5 +1,5 @@
 {% macro paginator(paginator) %}
-    <ul class="pagination justify-content-center">
+    <ul class="pagination pagination-sm justify-content-center">
         {% for page in paginator %}
             <li class="page-item{% if page.skip %} ms-3{% endif %}{% if page.active %} active{% endif %}">
                 <a class="page-link{% if page.disabled %} disabled{% endif %}" href="{{ page.link }}" aria-label="{{ page.label }}">
@@ -21,12 +21,12 @@
 {% block body %}
     {{ _self.paginator(table.paginator) }}
     {% if table.body is empty %}
-        <span class="justify-content-center">žádná data</span>
+        <div class="text-center">žádná data</div>
     {% else %}
     <table class="table">
-        <tr>{% for h in table.header %}<th>{{ h }}</th>{% endfor %}</tr>
+        <tr>{% for h in table.header %}{{ h.render("th")|raw }}{% endfor %}</tr>
         {% for row in table.body %}
-            <tr>{% for c in row %}<td>{{ c }}</td>{% endfor %}</tr>
+            <tr>{% for c in row %}{{ c.render("td")|raw }}{% endfor %}</tr>
         {% endfor %}
     </table>
     {{ _self.paginator(table.paginator) }}

@@ -23,17 +23,7 @@
                 <div class="navbar-text pull-right">
                     {% if user is not null %}
                         <a href="{{ path("user_detail") }}">{{ user.name }}</a>
-                        {% if is_granted('ROLE_SUPERADMIN') %}
-                            <span class="badge bg-danger">superadmin</span>
-                        {% elseif is_granted('ROLE_ADMIN') %}
-                            <span class="badge bg-danger">admin</span>
-                        {% elseif is_granted('ROLE_TEACHER') %}
-                            <span class="badge bg-success">učitel</span>
-                        {% elseif is_granted('ROLE_STUDENT') %}
-                            <span class="badge bg-info">student</span>
-                        {% else %}
-                            <span class="badge bg-secondary">neznámý</span>
-                        {% endif %}
+                        {% include 'snippets/fundamental-roles.html.twig' with {'fundamentalRoles': user.userData.fundamentalRoles} %}
                     {% else %}
                         nepřihlášen
                     {% endif %}

@@ -20,8 +20,12 @@ class UserDataProvider implements SSOUserDataProviderInterface, SSORoleDeciderIn
         $userEntity = $this->userRepository->findOneBy(["username" => $user->getLogin()]);
         $changed = false;
         if ($userEntity === null) {
+            $firstUser = ($this->userRepository->countUsers() === 0) ? true : false;
             $userEntity = new User($user->getLogin());
             $this->entityManager->persist($userEntity);
+            if ($firstUser) {
+                $userEntity->setRoles(['ROLE_SUPERADMIN']);
+            }
             $changed = true;
         }
         if ($userEntity->getName() !== $user->getName()) {
@@ -31,6 +35,12 @@ class UserDataProvider implements SSOUserDataProviderInterface, SSORoleDeciderIn
 
         if ($userEntity->isTeacher() !== $user->isTeacher()) {
             $userEntity->setTeacher($user->isTeacher());
+            $changed = true;
+        }
+
+        $studentClass = $user->isStudent() ? ($user->getClass() ?? '?') : null;
+        if ($userEntity->getStudentClass() !== $studentClass) {
+            $userEntity->setStudentClass($studentClass);
             $changed = true;
         }
 
@@ -45,23 +55,7 @@ class UserDataProvider implements SSOUserDataProviderInterface, SSORoleDeciderIn
     {
         $userEntity = $user->getUserData();
         assert($userEntity instanceof User);
-        $storedRoles = array_unique($userEntity->getRoles() ?? ['ROLE_DEFAULT']);
 
-        $roles = [];
-        foreach ($storedRoles as $role) {
-            if ($role === 'ROLE_DEFAULT') {
-                $roles = array_merge($roles, $this->getDefaultRoles($user));
-            } elseif (is_string($role)) {
-                $roles[] = $role;
-            }
-        }
-
-        return $roles;
-    }
-
-    public function getDefaultRoles(SSOUser $user): array
-    {
-        $role = $user->isTeacher() ? 'ROLE_TEACHER' : ($user->isStudent() ? 'ROLE_STUDENT' : 'ROLE_OTHER');
-        return [$role];
+        return $userEntity->getFundamentalRoles();
     }
 }

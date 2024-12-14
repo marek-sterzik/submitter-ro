@@ -6,6 +6,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use App\Exception\RequestCorrectionException;
 use App\Utility\RequestUtility;
+use App\Utility\Cell;
 
 abstract class AbstractTableController extends AbstractController
 {
@@ -103,13 +104,13 @@ abstract class AbstractTableController extends AbstractController
         $finalHeader = [];
         foreach ($header as $key => $heading) {
             $mapping[$key] = $i++;
-            $finalHeader[$mapping[$key]] = $heading;
+            $finalHeader[$mapping[$key]] = Cell::cell($heading);
         }
         $body = [];
         foreach ($data as $row) {
             $finalRow = [];
             foreach ($mapping as $key => $index) {
-                $finalRow[$index] = $row[$key] ?? null;
+                $finalRow[$index] = Cell::cell($row[$key] ?? null);
             }
             ksort($finalRow);
             $body[] = $finalRow;

@@ -1,0 +1,14 @@
+{% for role in fundamentalRoles %}
+    {% if role == 'ROLE_SUPERADMIN' %}
+        <span class="badge bg-danger">superadmin</span>
+    {% elseif role == 'ROLE_ADMIN' %}
+        <span class="badge bg-danger">admin</span>
+    {% elseif role == 'ROLE_TEACHER' %}
+        <span class="badge bg-success">učitel</span>
+    {% elseif role == 'ROLE_STUDENT' %}
+        <span class="badge bg-info">student</span>
+    {% else %}
+        <span class="badge bg-secondary">neznámý</span>
+    {% endif %}
+{% endfor %}
+
