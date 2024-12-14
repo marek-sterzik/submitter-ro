@@ -2,10 +2,11 @@
 
 namespace App\Exception;
 
+use Exception;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\RedirectResponse;
-use Exception;
+use App\Utility\RequestUtility;
 
 class RequestCorrectionException extends Exception
 {
@@ -16,19 +17,7 @@ class RequestCorrectionException extends Exception
 
     public function getRedirectResponse(): Response
     {
-        $query = $this->request->query->all();
-        foreach ($this->correctedQuery as $key => $value) {
-            if ($value === null) {
-                unset($query[$key]);
-            } else {
-                $query[$key] = $value;
-            }
-        }
-        $queryString = http_build_query($query);
-        if ($queryString !== "") {
-            $queryString = "?" . $queryString;
-        }
-        $uri = $this->request->getBasePath() . $this->request->getPathInfo() . $queryString;
+        $uri = RequestUtility::modifyUri($this->request, $this->correctedQuery);
         return new RedirectResponse($uri);
     }
 }

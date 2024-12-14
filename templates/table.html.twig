@@ -1,9 +1,34 @@
+{% macro paginator(paginator) %}
+    <ul class="pagination justify-content-center">
+        {% for page in paginator %}
+            <li class="page-item{% if page.skip %} ms-3{% endif %}{% if page.active %} active{% endif %}">
+                <a class="page-link{% if page.disabled %} disabled{% endif %}" href="{{ page.link }}" aria-label="{{ page.label }}">
+                    {% if page.type == 'prev' %}
+                        <span aria-hidden="true">&laquo;</span>
+                    {% elseif page.type == 'next' %}
+                        <span aria-hidden="true">&raquo;</span>
+                    {% elseif page.type == 'normal' %}
+                        {{ page.label }}
+                    {% else %}
+                        ?
+                    {% endif %}
+                </a>
+            </li>
+        {% endfor %}
+    </ul>
+{% endmacro %}
 {% extends "base.html.twig" %}
 {% block body %}
+    {{ _self.paginator(table.paginator) }}
+    {% if table.body is empty %}
+        <span class="justify-content-center">žádná data</span>
+    {% else %}
     <table class="table">
         <tr>{% for h in table.header %}<th>{{ h }}</th>{% endfor %}</tr>
         {% for row in table.body %}
             <tr>{% for c in row %}<td>{{ c }}</td>{% endfor %}</tr>
         {% endfor %}
     </table>
+    {{ _self.paginator(table.paginator) }}
+    {% endif %}
 {% endblock %}
