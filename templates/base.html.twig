@@ -45,15 +45,17 @@
                 </div>
             </div>
         </nav>
-        <menu class="nav nav-tabs mb-3">
-            {% for item in menu %}
-                <li class="nav-item">
-                    <a class="nav-link{% if item.actual %} active{% endif %}" href="{{ path(item.route) }}"{% if item.target_blank %} target="_blank"{% endif %}>{{ item.name }}</a>
-                </li>
-            {% endfor %}
-        </menu>
-        <div class="body">
-            {% block body %}{% endblock %}
+        <div class="container-sm">
+            <menu class="nav nav-tabs mb-3">
+                {% for item in menu %}
+                    <li class="nav-item">
+                        <a class="nav-link{% if item.actual %} active{% endif %}" href="{{ path(item.route) }}"{% if item.target_blank %} target="_blank"{% endif %}>{{ item.name }}</a>
+                    </li>
+                {% endfor %}
+            </menu>
+            <div class="body">
+                {% block body %}{% endblock %}
+            </div>
         </div>
     </body>
 </html>
