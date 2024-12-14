@@ -24,7 +24,6 @@ class UsersController extends AbstractDbTableController
     protected function getHeader(array $filterData): array
     {
         return [
-            "me" => "",
             "username" => "uživatelské jméno",
             "name" => "jméno",
             "roles" => "role",
@@ -35,17 +34,12 @@ class UsersController extends AbstractDbTableController
     protected function recordToArray(mixed $user): array
     {
         assert($user instanceof User);
-        if ($user->isStudent()) {
-            $class = Cell::html($this->renderView('snippets/class.html.twig', ["user" => $user]));
-        } else {
-            $class = null;
-        }
+        $class = Cell::html($this->renderView('snippets/class.html.twig', ["user" => $user]));
         $isMe = ($user === $this->getUser()?->getUserData()) ? true : false;
         $meBadge = $isMe ? (' ' . $this->renderView('snippets/me.html.twig')) : '';
         $roles = $this->renderView('snippets/fundamental-roles.html.twig', ['user' => $user, "full" => true]);
         return [
-            "me" => Cell::html($meBadge),
-            "username" => $user->getUsername(),
+            "username" => Cell::html(htmlspecialchars($user->getUsername()) . $meBadge),
             "name" => $user->getName(),
             "roles" => Cell::html($roles),
             "class" => $class,

@@ -26,7 +26,7 @@ class UserDataProvider implements SSOUserDataProviderInterface, SSORoleDeciderIn
             $userEntity = new User($user->getLogin());
             $this->entityManager->persist($userEntity);
             if ($firstUser) {
-                $userEntity->setRoles(['ROLE_SUPERADMIN']);
+                $userEntity->setEffectiveRole('ROLE_SUPERADMIN');
             }
             $changed = true;
             $update = true;
@@ -43,15 +43,16 @@ class UserDataProvider implements SSOUserDataProviderInterface, SSORoleDeciderIn
                 $userEntity->setName($user->getName());
                 $changed = true;
             }
-
-            if ($userEntity->isTeacher() !== $user->isTeacher()) {
-                $userEntity->setTeacher($user->isTeacher());
+            
+            $originalRole = $user->isTeacher() ? 'ROLE_TEACHER' : ($user->isStudent() ? 'ROLE_STUDENT' : 'ROLE_OTHER');
+            if ($userEntity->getOriginalRole() !== $originalRole) {
+                $userEntity->setOriginalRole($originalRole);
                 $changed = true;
             }
 
-            $studentClass = $user->isStudent() ? strtoupper($user->getClass() ?? '?') : null;
-            if ($userEntity->getStudentClass() !== $studentClass) {
-                $userEntity->setStudentClass($studentClass);
+            $studentClass = ($originalRole === 'ROLE_STUDENT') ? $user->getClass() : null;
+            if ($userEntity->getOriginalStudentClass() !== $studentClass) {
+                $userEntity->setOriginalStudentClass($studentClass);
                 $changed = true;
             }
         }

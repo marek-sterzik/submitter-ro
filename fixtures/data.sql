@@ -21,7 +21,7 @@
 
 LOCK TABLES `user` WRITE;
 /*!40000 ALTER TABLE `user` DISABLE KEYS */;
-INSERT INTO `user` (`id`, `username`, `name`, `teacher`, `student_class`, `roles`, `last_login_at`) VALUES (1,'sterzik','Marek Sterzik',1,NULL,'[\"ROLE_SUPERADMIN\"]','2024-12-14 19:59:25'),(2,'test','Tester Testerovič',0,'I4',NULL,'2024-12-14 20:13:38'),(3,'ucitel.ucitelovic','Učitel Učitelovič',1,NULL,NULL,'2024-12-14 20:20:28'),(4,'admin.adminovic','Admin Adminovič',1,NULL,'[\"ROLE_ADMIN\"]','2024-12-14 20:21:20'),(5,'skolnik.skolnikovic','Školník Školníkovič',0,NULL,NULL,'2024-12-14 20:22:08'),(6,'student.adminovic','Student Adminovič',0,'E4','[\"ROLE_ADMIN\"]','2024-12-14 20:59:10');
+INSERT INTO `user` (`id`, `username`, `name`, `original_role`, `original_student_class`, `effective_role`, `effective_student_class`, `last_login_at`) VALUES (1,'sterzik','Marek Sterzik','ROLE_TEACHER',NULL,'ROLE_SUPERADMIN',NULL,'2024-12-14 21:39:42'),(2,'ucitel.ucitelovic','Učitel Učitelovič','ROLE_TEACHER',NULL,NULL,NULL,NULL),(3,'skolnik.skolnikovic','Školník Školníkovič','ROLE_OTHER',NULL,NULL,NULL,NULL),(4,'student.studentovic','Student Studentovič','ROLE_STUDENT','I4',NULL,NULL,NULL),(5,'student.studentovic2','Student Studentovič Nezvěstný','ROLE_STUDENT',NULL,NULL,NULL,NULL),(6,'student.adminovic','Student Adminovič','ROLE_STUDENT','E4','ROLE_ADMIN',NULL,NULL),(7,'admin.studentovic','Učitel Studentovič','ROLE_TEACHER',NULL,'ROLE_STUDENT','E1',NULL);
 /*!40000 ALTER TABLE `user` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
@@ -34,4 +34,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2024-12-14 21:06:57
+-- Dump completed on 2024-12-14 21:50:29

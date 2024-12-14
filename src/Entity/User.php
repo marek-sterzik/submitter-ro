@@ -20,14 +20,17 @@ class User
     #[ORM\Column(length: 255)]
     private string $name;
 
-    #[ORM\Column]
-    private bool $teacher;
+    #[ORM\Column(length: 255)]
+    private string $originalRole;
     
     #[ORM\Column(length: 16, nullable: true)]
-    private string $studentClass;
-
-    #[ORM\Column(nullable: true)]
-    private ?array $roles = null;
+    private ?string $originalStudentClass = null;
+    
+    #[ORM\Column(length: 255, nullable: true)]
+    private ?string $effectiveRole = null;
+    
+    #[ORM\Column(length: 16, nullable: true)]
+    private ?string $effectiveStudentClass = null;
 
     #[ORM\Column(nullable: true)]
     private ?DateTimeImmutable $lastLoginAt;
@@ -66,45 +69,65 @@ class User
         return $this;
     }
 
-    public function isTeacher(): ?bool
+    public function getOriginalRole(): ?string
     {
-        return $this->teacher ?? null;
+        return $this->originalRole ?? null;
     }
 
-    public function setTeacher(bool $teacher): static
+    public function setOriginalRole(string $originalRole): static
     {
-        $this->teacher = $teacher;
+        $this->originalRole = $originalRole;
 
         return $this;
     }
 
-    public function getStudentClass(): ?string
+    public function getOriginalStudentClass(): ?string
     {
-        return $this->studentClass ?? null;
+        return $this->originalStudentClass ?? null;
     }
 
-    public function setStudentClass(?string $studentClass): static
+    public function setOriginalStudentClass(?string $originalStudentClass): static
     {
-        $this->studentClass = $studentClass;
+        $this->originalStudentClass = $originalStudentClass;
 
         return $this;
     }
 
-    public function isStudent(): bool
+    public function getEffectiveRole(): ?string
     {
-        return ($this->studentClass ?? null) !== null;
+        return $this->effectiveRole ?? null;
     }
 
-    public function getRoles(): ?array
+    public function setEffectiveRole(?string $effectiveRole): static
     {
-        return $this->roles ?? null;
-    }
-
-    public function setRoles(?array $roles): static
-    {
-        $this->roles = $roles;
+        $this->effectiveRole = $effectiveRole;
 
         return $this;
+    }
+
+    public function getEffectiveStudentClass(): ?string
+    {
+        return $this->effectiveStudentClass ?? null;
+    }
+
+    public function setEffectiveStudentClass(?string $effectiveStudentClass): static
+    {
+        $this->effectiveStudentClass = $effectiveStudentClass;
+
+        return $this;
+    }
+
+    public function getRealRole(): string
+    {
+        return $this->getEffectiveRole() ?? $this->getOriginalRole();
+    }
+
+    public function getRealStudentClass(): ?string
+    {
+        if ($this->getRealRole() !== 'ROLE_STUDENT') {
+            return null;
+        }
+        return $this->getEffectiveStudentClass() ?? ($this->getOriginalStudentClass() ?? '?');
     }
 
     public function getLastLoginAt(): ?DateTimeImmutable
@@ -121,45 +144,13 @@ class User
 
     public function getFundamentalRoles(): array
     {
-        return [$this->getFundamentalRole()];
+        return [$this->getRealRole()];
     }
 
     public function getFundamentalRoleGains(): array
     {
         return [
-            [$this->getBasicFundamentalRole(), $this->getFundamentalRole()],
+            [$this->getOriginalRole(), $this->getRealRole()],
         ];
-    }
-
-    private function getBasicFundamentalRole(): string
-    {
-        if ($this->isTeacher()) {
-            return 'ROLE_TEACHER';
-        } elseif ($this->isStudent()) {
-            return 'ROLE_STUDENT';
-        } else {
-            return 'ROLE_OTHER';
-        }
-    }
-
-    private function getFundamentalRole(): string
-    {
-        $testRoles = ['ROLE_SUPERADMIN', 'ROLE_ADMIN', 'ROLE_TEACHER', 'ROLE_OTHER'];
-        if ($this->roles !== null) {
-            foreach ($testRoles as $role) {
-                if (in_array($role, $this->roles)) {
-                    return $role;
-                }
-            }
-        }
-        if ($this->roles === null || in_array('ROLE_DEFAULT', $this->roles)) {
-            if ($this->isTeacher()) {
-                return 'ROLE_TEACHER';
-            }
-            if ($this->isStudent()) {
-                return 'ROLE_STUDENT';
-            }
-        }
-        return 'ROLE_OTHER';
     }
 }
