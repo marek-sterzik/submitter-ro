@@ -23,7 +23,7 @@
                 <div class="navbar-text pull-right">
                     {% if user is not null %}
                         <a href="{{ path("user_detail") }}">{{ user.name }}</a>
-                        {% include 'snippets/fundamental-roles.html.twig' with {'fundamentalRoles': user.userData.fundamentalRoles} %}
+                        {% include 'snippets/fundamental-roles.html.twig' with {'user': user.userData} %}
                     {% else %}
                         nepřihlášen
                     {% endif %}

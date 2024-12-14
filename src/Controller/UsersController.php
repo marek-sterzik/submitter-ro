@@ -34,10 +34,16 @@ class UsersController extends AbstractDbTableController
     protected function recordToArray(mixed $user): array
     {
         assert($user instanceof User);
+        if ($user->isStudent()) {
+            $class = Cell::html($this->renderView('snippets/class.html.twig', ["user" => $user]));
+        } else {
+            $class = null;
+        }
         return [
             "username" => $user->getUsername(),
             "name" => $user->getName(),
-            "roles" => Cell::html($this->renderView('snippets/fundamental-roles.html.twig', ['fundamentalRoles' => $user->getFundamentalRoles()])),
+            "roles" => Cell::html($this->renderView('snippets/fundamental-roles.html.twig', ['user' => $user])),
+            "class" => $class,
         ];
     }
 }

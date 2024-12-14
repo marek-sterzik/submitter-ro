@@ -92,7 +92,7 @@ class User
 
     public function isStudent(): bool
     {
-        return $this->studentClass !== null;
+        return ($this->studentClass ?? null) !== null;
     }
 
     public function getRoles(): ?array

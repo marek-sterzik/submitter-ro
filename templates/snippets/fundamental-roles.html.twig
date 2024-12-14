@@ -1,4 +1,4 @@
-{% for role in fundamentalRoles %}
+{% for role in user.fundamentalRoles %}
     {% if role == 'ROLE_SUPERADMIN' %}
         <span class="badge bg-danger">superadmin</span>
     {% elseif role == 'ROLE_ADMIN' %}
