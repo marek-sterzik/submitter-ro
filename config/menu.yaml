@@ -1,7 +1,10 @@
 menu:
-  - name: home
+  - name: domů
     route: main
     roles: ['PUBLIC_ACCESS']
+  - name: uživatelé
+    route: users
+    roles: ['ROLE_ADMIN']
   - name: adminer
     route: app.adminer
     roles: ["ROLE_SUPERADMIN"]

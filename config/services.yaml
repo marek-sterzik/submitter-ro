@@ -15,7 +15,7 @@ services:
     _instanceof:
         App\Controller\AbstractController:
             calls:
-                - setMenuGenerator: ['@App\Framework\MenuGenerator']
+                - setServices: ['@App\Framework\MenuGenerator', '@Symfony\Component\HttpFoundation\RequestStack']
     # makes classes in src/ available to be used as services
     # this creates a service per class whose id is the fully-qualified class name
     App\:

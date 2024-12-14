@@ -1,0 +1,9 @@
+{% extends "base.html.twig" %}
+{% block body %}
+    <table class="table">
+        <tr>{% for h in table.header %}<th>{{ h }}</th>{% endfor %}</tr>
+        {% for row in table.body %}
+            <tr>{% for c in row %}<td>{{ c }}</td>{% endfor %}</tr>
+        {% endfor %}
+    </table>
+{% endblock %}
