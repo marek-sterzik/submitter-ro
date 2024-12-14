@@ -2,6 +2,7 @@
 
 namespace App\Entity;
 
+use DateTimeImmutable;
 use App\Repository\UserRepository;
 use Doctrine\ORM\Mapping as ORM;
 
@@ -27,6 +28,9 @@ class User
 
     #[ORM\Column(nullable: true)]
     private ?array $roles = null;
+
+    #[ORM\Column(nullable: true)]
+    private ?DateTimeImmutable $lastLoginAt;
 
     public function __construct(string $username)
     {
@@ -99,6 +103,18 @@ class User
     public function setRoles(?array $roles): static
     {
         $this->roles = $roles;
+
+        return $this;
+    }
+
+    public function getLastLoginAt(): ?DateTimeImmutable
+    {
+        return $this->lastLoginAt ?? null;
+    }
+
+    public function setLastLoginAt(?DateTimeImmutable $lastLoginAt): self
+    {
+        $this->lastLoginAt = $lastLoginAt;
 
         return $this;
     }

@@ -2,6 +2,7 @@
 
 namespace App\Framework;
 
+use DateTimeImmutable;
 use SPSOstrov\SSOBundle\SSOUserDataProviderInterface;
 use SPSOstrov\SSOBundle\SSORoleDeciderInterface;
 use SPSOstrov\SSOBundle\SSOUser;
@@ -17,6 +18,7 @@ class UserDataProvider implements SSOUserDataProviderInterface, SSORoleDeciderIn
 
     public function getUserData(SSOUser $user): mixed
     {
+        $loginAt = (new DateTimeImmutable())->setTimestamp($user->getLoginTimestamp());
         $userEntity = $this->userRepository->findOneBy(["username" => $user->getLogin()]);
         $changed = false;
         if ($userEntity === null) {
@@ -27,21 +29,31 @@ class UserDataProvider implements SSOUserDataProviderInterface, SSORoleDeciderIn
                 $userEntity->setRoles(['ROLE_SUPERADMIN']);
             }
             $changed = true;
-        }
-        if ($userEntity->getName() !== $user->getName()) {
-            $userEntity->setName($user->getName());
-            $changed = true;
-        }
-
-        if ($userEntity->isTeacher() !== $user->isTeacher()) {
-            $userEntity->setTeacher($user->isTeacher());
-            $changed = true;
+            $update = true;
+        } else {
+            $update = ($userEntity->getLastLoginAt() === null || $userEntity->getLastLoginAt() <= $loginAt);
         }
 
-        $studentClass = $user->isStudent() ? ($user->getClass() ?? '?') : null;
-        if ($userEntity->getStudentClass() !== $studentClass) {
-            $userEntity->setStudentClass($studentClass);
-            $changed = true;
+        if ($update) {
+            if ($userEntity->getLastLoginAt()?->getTimestamp() !== $loginAt->getTimestamp()) {
+                $userEntity->setLastLoginAt($loginAt);
+                $changed = true;
+            }
+            if ($userEntity->getName() !== $user->getName()) {
+                $userEntity->setName($user->getName());
+                $changed = true;
+            }
+
+            if ($userEntity->isTeacher() !== $user->isTeacher()) {
+                $userEntity->setTeacher($user->isTeacher());
+                $changed = true;
+            }
+
+            $studentClass = $user->isStudent() ? strtoupper($user->getClass() ?? '?') : null;
+            if ($userEntity->getStudentClass() !== $studentClass) {
+                $userEntity->setStudentClass($studentClass);
+                $changed = true;
+            }
         }
 
         if ($changed) {
