@@ -42,11 +42,12 @@ class UsersController extends AbstractDbTableController
         }
         $isMe = ($user === $this->getUser()?->getUserData()) ? true : false;
         $meBadge = $isMe ? (' ' . $this->renderView('snippets/me.html.twig')) : '';
+        $roles = $this->renderView('snippets/fundamental-roles.html.twig', ['user' => $user, "full" => true]);
         return [
             "me" => Cell::html($meBadge),
             "username" => $user->getUsername(),
             "name" => $user->getName(),
-            "roles" => Cell::html($this->renderView('snippets/fundamental-roles.html.twig', ['user' => $user])),
+            "roles" => Cell::html($roles),
             "class" => $class,
         ];
     }

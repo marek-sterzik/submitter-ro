@@ -1,4 +1,4 @@
-{% for role in user.fundamentalRoles %}
+{% macro roleBadge(role) %}
     {% if role == 'ROLE_SUPERADMIN' %}
         <span class="badge bg-danger">superadmin</span>
     {% elseif role == 'ROLE_ADMIN' %}
@@ -10,5 +10,11 @@
     {% else %}
         <span class="badge bg-secondary">neznámý</span>
     {% endif %}
+{% endmacro %}
+{% for roleGain in user.fundamentalRoleGains %}
+    {% if full is defined and full and roleGain[0] != roleGain[1] %}
+    {{_self.roleBadge(roleGain[0])}} →
+    {% endif %}
+    {{_self.roleBadge(roleGain[1])}}
 {% endfor %}
 

@@ -124,9 +124,27 @@ class User
         return [$this->getFundamentalRole()];
     }
 
+    public function getFundamentalRoleGains(): array
+    {
+        return [
+            [$this->getBasicFundamentalRole(), $this->getFundamentalRole()],
+        ];
+    }
+
+    private function getBasicFundamentalRole(): string
+    {
+        if ($this->isTeacher()) {
+            return 'ROLE_TEACHER';
+        } elseif ($this->isStudent()) {
+            return 'ROLE_STUDENT';
+        } else {
+            return 'ROLE_OTHER';
+        }
+    }
+
     private function getFundamentalRole(): string
     {
-        $testRoles = ['ROLE_SUPERADMIN', 'ROLE_ADMIN', 'ROLE_TEACHER'];
+        $testRoles = ['ROLE_SUPERADMIN', 'ROLE_ADMIN', 'ROLE_TEACHER', 'ROLE_OTHER'];
         if ($this->roles !== null) {
             foreach ($testRoles as $role) {
                 if (in_array($role, $this->roles)) {
