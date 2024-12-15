@@ -17,6 +17,13 @@ class UserRestoreRoleController extends AbstractController
     public function index(): Response
     {
         $user = $this->getUser()->getUserData();
+        return $this->indexUser($user);
+    }
+
+    #[IsGranted('ROLE_ADMIN')]
+    #[Route("/restore-role/{user}", name: "restore_role_user")]
+    public function indexUser(User $user): Response
+    {
         if ($user->isRoleRestorable()) {
             $user->restoreRole();
             $this->getEntityManager()->flush();

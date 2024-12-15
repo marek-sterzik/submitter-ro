@@ -18,7 +18,12 @@ class UserEditController extends AbstractController
     {
         $superadmin = $this->isGranted('ROLE_SUPERADMIN');
         $restorableRole = $this->getRestorableRole($user, $superadmin);
-        $options = ["superadmin" => $superadmin, "default_role" => $user->getOriginalRole()];
+        $userMayBeSuperadmin = $user->getEffectiveRole() === 'ROLE_SUPERADMIN' ||
+            $user->getRestorableRole() === 'ROLE_SUPERADMIN';
+        $options = [
+            "superadmin" => $superadmin || $userMayBeSuperadmin,
+            "default_role" => $user->getOriginalRole()
+        ];
         return $this->form(UserRolesType::class, $user, $options)
             ->action("Uložit", function (User $user) use ($restorableRole) {
                 if ($user->getRealRole() !== 'ROLE_STUDENT') {
