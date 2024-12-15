@@ -22,7 +22,7 @@ class AbstractController extends AbstractControllerBase
 
     public function setServices(
         MenuGenerator $menuGenerator,
-        RequestStack $requestStack, 
+        RequestStack $requestStack,
         EntityManager $entityManager
     ): self {
         $this->menuGenerator = $menuGenerator;
@@ -76,8 +76,11 @@ class AbstractController extends AbstractControllerBase
         );
     }
 
-    protected function generateUrl(string $route, array $parameters = [], int $referenceType = UrlGeneratorInterface::ABSOLUTE_PATH): string
-    {
+    protected function generateUrl(
+        string $route,
+        array $parameters = [],
+        int $referenceType = UrlGeneratorInterface::ABSOLUTE_PATH
+    ): string {
         if (isset($parameters['_back']) && $parameters['_back'] === true) {
             $parameters['_back'] = $this->getRequest()->getRequestUri();
         }

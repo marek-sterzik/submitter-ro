@@ -53,7 +53,11 @@ class UsersController extends AbstractDbTableController
     private function getUserActions(User $user): ?array
     {
         return [
-            Action::get($this->generateUrl("user", ["user" => $user->getId(), "_back" => true]), "nastavit roli", "btn-primary")
+            Action::get(
+                $this->generateUrl("user", ["user" => $user->getId(), "_back" => true]),
+                "nastavit roli",
+                "btn-primary"
+            )
         ];
     }
 }

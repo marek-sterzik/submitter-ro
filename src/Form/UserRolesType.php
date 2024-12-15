@@ -9,7 +9,6 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 
-
 class UserRolesType extends AbstractType
 {
     const DEFAULT_ROLE_LABEL = "implicitní hodnota z SSO (%s)";

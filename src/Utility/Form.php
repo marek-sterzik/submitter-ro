@@ -60,8 +60,7 @@ class Form
         bool $validated = true,
         array $options = [],
         string $type = 'btn-primary',
-    ): self
-    {
+    ): self {
         $actionIndex = count($this->actions);
         $this->actions[] = [
             "id" => "_action_" . $actionIndex,
