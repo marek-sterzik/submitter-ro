@@ -7,13 +7,14 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use App\Exception\ResponseException;
-use Symfony\Component\Form\Form as FormComponent;
+use Symfony\Component\Form\FormInterface as FormComponent;
 
 class Form
 {
     private string $template = "form.html.twig";
     private array $templateVars = [];
-    private bool $validOnly = true;
+
+    /** @var callable */
     private $renderer;
     private array $actions = [];
 
@@ -40,6 +41,7 @@ class Form
         }
         $clickedAction = null;
         foreach ($this->actions as $action) {
+            /** @phpstan-ignore-next-line */
             if ($this->form->get($action['id'])->isClicked()) {
                 $clickedAction = $action;
                 break;

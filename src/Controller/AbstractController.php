@@ -11,6 +11,7 @@ use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Doctrine\ORM\EntityManagerInterface as EntityManager;
+use SPSOstrov\SSOBundle\SSOUser;
 use App\Framework\MenuGenerator;
 use App\Utility\Form;
 
@@ -102,5 +103,12 @@ class AbstractController extends AbstractControllerBase
     protected function getDefaultBackUrl(): string
     {
         return $this->generateUrl("main");
+    }
+
+    public function getUser(): ?SSOUser
+    {
+        $user = parent::getUser();
+        assert($user === null || $user instanceof SSOUser);
+        return $user;
     }
 }

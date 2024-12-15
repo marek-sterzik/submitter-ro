@@ -9,7 +9,7 @@ class Action
         return new self($uri, $label, $cssClass);
     }
 
-    private function __construct(private string $uri, private ?string $label = null, private ?string $cssClass)
+    private function __construct(private string $uri, private ?string $label = null, private ?string $cssClass = null)
     {
     }
 

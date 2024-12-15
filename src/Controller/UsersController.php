@@ -50,7 +50,7 @@ class UsersController extends AbstractDbTableController
         ];
     }
 
-    private function getUserActions(User $user): ?array
+    private function getUserActions(User $user): array
     {
         return [
             Action::get(

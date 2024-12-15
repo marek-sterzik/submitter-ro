@@ -33,6 +33,7 @@
     </rule>
     <rule ref="rulesets/naming.xml">
         <exclude name="ShortVariable"/>
+        <exclude name="ShortMethodName"/>
         <exclude name="LongVariable"/>
     </rule>
     <rule ref="rulesets/unusedcode.xml">
@@ -44,6 +45,11 @@
     <rule ref="rulesets/naming.xml/ShortVariable">
         <properties>
             <property name="exceptions" value="id,ip,i,j,n,io,qb,os,to"/>
+        </properties>
+    </rule>
+    <rule ref="rulesets/naming.xml/ShortMethodName">
+        <properties>
+            <property name="exceptions" value="gt,lt,ge,le,eq"/>
         </properties>
     </rule>
     <rule ref="rulesets/design.xml/CouplingBetweenObjects">

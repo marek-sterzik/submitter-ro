@@ -20,7 +20,7 @@ class UserEditController extends AbstractController
         $restorableRole = $this->getRestorableRole($user, $superadmin);
         $options = ["superadmin" => $superadmin, "default_role" => $user->getOriginalRole()];
         return $this->form(UserRolesType::class, $user, $options)
-            ->action("Uložit", function (User $user) use ($superadmin, $restorableRole) {
+            ->action("Uložit", function (User $user) use ($restorableRole) {
                 if ($user->getRealRole() !== 'ROLE_STUDENT') {
                     $user->setEffectiveStudentClass(null);
                 }
@@ -41,6 +41,7 @@ class UserEditController extends AbstractController
         if ($user->getRestorableRole() !== null) {
             $userMaxRole = RoleComparator::max($userMaxRole, $user->getRestorableRole());
         }
+        
         if (($user->getRealRole() === 'ROLE_SUPERADMIN' && !$superadmin) || $user === $this->getUser()->getUserData()) {
             return $userMaxRole;
         }
