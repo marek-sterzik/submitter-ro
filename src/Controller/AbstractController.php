@@ -8,9 +8,11 @@ use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController as AbstractControllerBase;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Doctrine\ORM\EntityManagerInterface as EntityManager;
 use App\Framework\MenuGenerator;
+use App\Utility\Form;
 
 class AbstractController extends AbstractControllerBase
 {
@@ -62,5 +64,40 @@ class AbstractController extends AbstractControllerBase
     ): Response {
         $parameters = array_merge($this->getDefaultParameters(), $parameters);
         return parent::render($view, $parameters, $response);
+    }
+
+    protected function form(string $form, mixed $data, array $options = []): Form
+    {
+        $form = $this->createForm($form, $data, $options);
+        return new Form(
+            $form,
+            $this->getRequest(),
+            fn (string $template, array $templateVars = []) => $this->render($template, $templateVars)
+        );
+    }
+
+    protected function generateUrl(string $route, array $parameters = [], int $referenceType = UrlGeneratorInterface::ABSOLUTE_PATH): string
+    {
+        if (isset($parameters['_back']) && $parameters['_back'] === true) {
+            $parameters['_back'] = $this->getRequest()->getRequestUri();
+        }
+        return parent::generateUrl($route, $parameters, $referenceType);
+    }
+
+    protected function redirectBack(bool $always = false): ?Response
+    {
+        $back = $this->getRequest()->query->get("_back");
+        if (is_string($back)) {
+            return $this->redirect($back);
+        }
+        if ($always) {
+            return $this->redirect($this->getDefaultBackUrl());
+        }
+        return null;
+    }
+
+    protected function getDefaultBackUrl(): string
+    {
+        return $this->generateUrl("main");
     }
 }

@@ -1,3 +1,4 @@
+{% extends "base.html.twig" %}
 {% macro paginator(paginator) %}
     <ul class="pagination pagination-sm justify-content-center">
         {% for page in paginator %}
@@ -17,13 +18,12 @@
         {% endfor %}
     </ul>
 {% endmacro %}
-{% extends "base.html.twig" %}
 {% block body %}
     {{ _self.paginator(table.paginator) }}
     {% if table.body is empty %}
         <div class="text-center">žádná data</div>
     {% else %}
-    <table class="table table-striped table-hover">
+    <table class="table table-striped table-hover align-middle">
         <thead>
             <tr>{% for h in table.header %}{{ h.render("th")|raw }}{% endfor %}</tr>
         </thead>

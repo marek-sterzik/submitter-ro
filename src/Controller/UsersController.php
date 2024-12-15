@@ -4,12 +4,15 @@ namespace App\Controller;
 
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Security\Http\Attribute\IsGranted;
 use Doctrine\ORM\QueryBuilder;
 use App\Entity\User;
 use App\Utility\Cell;
+use App\Utility\Action;
 
 class UsersController extends AbstractDbTableController
 {
+    #[IsGranted('ROLE_ADMIN')]
     #[Route("/users", name: "users")]
     public function index(): Response
     {
@@ -43,6 +46,14 @@ class UsersController extends AbstractDbTableController
             "name" => $user->getName(),
             "roles" => Cell::html($roles),
             "class" => $class,
+            "_actions" => $this->getUserActions($user),
+        ];
+    }
+
+    private function getUserActions(User $user): ?array
+    {
+        return [
+            Action::get($this->generateUrl("user", ["user" => $user->getId(), "_back" => true]), "nastavit roli", "btn-primary")
         ];
     }
 }

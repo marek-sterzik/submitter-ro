@@ -9,6 +9,19 @@ class Cell
         if ($cell instanceof self) {
             return $cell;
         }
+        if (is_array($cell)) {
+            $cellHtml = "";
+            foreach ($cell as $item) {
+                if (is_string($item)) {
+                    $cellHtml .= $item;
+                } elseif (($item instanceof self) || ($item instanceof Action)) {
+                    $cellHtml .= $item->render();
+                } else {
+                    $cellHtml .= (string)$item;
+                }
+            }
+            return self::html($cellHtml);
+        }
         return self::text($cell);
     }
 
@@ -24,6 +37,11 @@ class Cell
 
     private function __construct(private string $html, private array $attributes, private ?string $tag)
     {
+    }
+
+    public function attribute(string $attribute, string $value): self
+    {
+        return $this->attributes([$attribute => $value]);
     }
 
     public function attributes(array $attributes): self

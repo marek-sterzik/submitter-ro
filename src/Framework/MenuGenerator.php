@@ -42,9 +42,20 @@ class MenuGenerator
     {
         $menuItem['hidden'] = $menuItem['hidden'] ?? false;
         $menuItem['target_blank'] = $menuItem['target_blank'] ?? false;
-        $menuItem['actual'] = ($menuItem['route'] === $currentRoute) ? true : false;
+        $menuItem['actual'] = $this->isMenuItemActual($menuItem, $currentRoute);
 
         return $menuItem;
+    }
+
+    private function isMenuItemActual(array $menuItem, string $currentRoute): bool
+    {
+        if ($menuItem['route'] === $currentRoute) {
+            return true;
+        }
+        if (in_array($currentRoute, $menuItem['routes'] ?? [])) {
+            return true;
+        }
+        return false;
     }
 
     private function granted(?array $roles): bool

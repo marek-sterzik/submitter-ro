@@ -102,15 +102,25 @@ abstract class AbstractTableController extends AbstractController
         $i = 0;
         $mapping = [];
         $finalHeader = [];
+        $actionIndex = null;
         foreach ($header as $key => $heading) {
+            if ($key === "_actions") {
+                $actionIndex = $i;
+            }
             $mapping[$key] = $i++;
             $finalHeader[$mapping[$key]] = Cell::cell($heading);
+        }
+        if ($actionIndex === null) {
+            $actionIndex = $i++;
         }
         $body = [];
         foreach ($data as $row) {
             $finalRow = [];
             foreach ($mapping as $key => $index) {
                 $finalRow[$index] = Cell::cell($row[$key] ?? null);
+            }
+            if (isset($row['_actions'])) {
+                $finalRow[$actionIndex] = Cell::cell($row['_actions'])->attribute("class", "text-end");
             }
             ksort($finalRow);
             $body[] = $finalRow;

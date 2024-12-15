@@ -31,6 +31,9 @@ class User
     
     #[ORM\Column(length: 16, nullable: true)]
     private ?string $effectiveStudentClass = null;
+    
+    #[ORM\Column(length: 255, nullable: true)]
+    private ?string $restorableRole = null;
 
     #[ORM\Column(nullable: true)]
     private ?DateTimeImmutable $lastLoginAt;
@@ -113,6 +116,18 @@ class User
     public function setEffectiveStudentClass(?string $effectiveStudentClass): static
     {
         $this->effectiveStudentClass = $effectiveStudentClass;
+
+        return $this;
+    }
+
+    public function getRestorableRole(): ?string
+    {
+        return $this->restorableRole ?? null;
+    }
+
+    public function setRestorableRole(?string $restorableRole): static
+    {
+        $this->restorableRole = $restorableRole;
 
         return $this;
     }
