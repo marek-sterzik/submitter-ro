@@ -3,12 +3,26 @@
 namespace App\Entity;
 
 use DateTimeImmutable;
-use App\Repository\UserRepository;
 use Doctrine\ORM\Mapping as ORM;
+use App\Repository\UserRepository;
+use App\Utility\RoleComparator;
 
 #[ORM\Entity(repositoryClass: UserRepository::class)]
 class User
 {
+    /**
+     * The fundamental roles with their description.
+     * The order is important. The roles are
+     * ordered from lowest to highest roles.
+     */
+    const ROLES = [
+        "ROLE_OTHER" => "neznámý",
+        "ROLE_STUDENT" => "student",
+        "ROLE_TEACHER" => "učitel",
+        "ROLE_ADMIN" => "admin",
+        "ROLE_SUPERADMIN" => "superadmin",
+    ];
+
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
@@ -167,5 +181,24 @@ class User
         return [
             [$this->getOriginalRole(), $this->getRealRole()],
         ];
+    }
+
+    public function isRoleRestorable(): bool
+    {
+        return ($this->restorableRole !== null) ? true : false;
+    }
+
+    public function restoreRole(): self
+    {
+        if ($this->isRoleRestorable()) {
+            $gainedRole = RoleComparator::max($this->restorableRole, $this->getRealRole());
+            if ($this->originalRole === $gainedRole) {
+                $this->setEffectiveRole(null);
+            } else {
+                $this->setEffectiveRole($gainedRole);
+            }
+            $this->restorableRole = null;
+        }
+        return $this;
     }
 }

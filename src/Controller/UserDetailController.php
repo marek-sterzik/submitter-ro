@@ -10,6 +10,7 @@ class UserDetailController extends AbstractController
     #[Route("/user-detail", name: "user_detail")]
     public function index(): Response
     {
-        return $this->render('user-detail.html.twig', []);
+        $restoreRoleUrl = $this->generateUrl('restore_role', ["_back" => true]);
+        return $this->render('user-detail.html.twig', ["restoreRoleUrl" => $restoreRoleUrl]);
     }
 }

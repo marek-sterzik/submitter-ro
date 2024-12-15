@@ -14,12 +14,8 @@ class UserRolesType extends AbstractType
 {
     const DEFAULT_ROLE_LABEL = "implicitní hodnota z SSO (%s)";
     const DEFAULT_ROLE_LABEL_NO_ROLE = "implicitní hodnota z SSO";
-    const ROLES = [
-        "ROLE_STUDENT" => "student",
-        "ROLE_TEACHER" => "učitel",
-        "ROLE_ADMIN" => "admin",
-        "ROLE_SUPERADMIN" => "superadmin",
-    ];
+    const ROLES = User::ROLES;
+    
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $choices = $this->getRoleChoices($options['superadmin'], $options['default_role']);
@@ -51,7 +47,7 @@ class UserRolesType extends AbstractType
             $defaultLabel => null,
         ];
         foreach (self::ROLES as $role => $label) {
-            if ($role !== 'ROLE_SUPERADMIN' || $superadmin) {
+            if ($role !== 'ROLE_OTHER' && ($role !== 'ROLE_SUPERADMIN' || $superadmin)) {
                 $choices[$label] = $role;
             }
         }

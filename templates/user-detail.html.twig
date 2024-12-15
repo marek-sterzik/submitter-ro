@@ -2,5 +2,10 @@
 {% block body %}
     {% if user is not null %}
         {{ user.prettyPrint()|raw }}
+        {% if user.userData.isRoleRestorable %}
+            <div class="text-center mt-3">
+            <a href="{{ restoreRoleUrl }}" class="btn btn-primary" role="button">Obnovit původní roli</a>
+            </div>
+        {% endif %}
     {% endif %}
 {% endblock %}
