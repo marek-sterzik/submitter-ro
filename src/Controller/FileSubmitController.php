@@ -18,9 +18,9 @@ class FileSubmitController extends AbstractController
             var_dump($data["file"]); die;
             return $this->redirectBack(true);
         })
-        ->action("Zrušit", function (User $user) {
+        ->action("Zrušit", function (array $data) {
             return $this->redirectBack(true);
-        }, type: 'btn-secondary')
+        }, type: 'btn-secondary', validated: false)
         ->handle()
     ;
     }

@@ -35,7 +35,7 @@ class UserEditController extends AbstractController
             })
             ->action("Zrušit", function (User $user) {
                 return $this->redirectBack(true);
-            }, type: 'btn-secondary')
+            }, type: 'btn-secondary', validated: false)
             ->handle()
         ;
     }

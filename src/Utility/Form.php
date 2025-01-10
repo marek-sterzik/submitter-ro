@@ -26,8 +26,12 @@ class Form
     public function handle(): Response
     {
         foreach ($this->actions as $action) {
+            $baseClass = "btn";
+            if (!$action['validated']) {
+                $baseClass .= " non-validated-action";
+            }
             $options = array_merge([
-                "attr" => ["class" => "btn " . $action['type']],
+                "attr" => ["class" => $baseClass . " " . $action['type']],
                 "row_attr" => ["class" => "md-3 me-3 d-inline-block"],
             ], $action['options'], [
                 "label" => $action['label'],
