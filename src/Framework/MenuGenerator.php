@@ -31,7 +31,7 @@ class MenuGenerator
             if ($this->granted($menuItem['roles'] ?? null)) {
                 $finalItem = $this->createMenuItem($menuItem, $currentRoute);
                 if (!$finalItem['hidden'] || $finalItem['actual']) {
-                    $menu[] = $this->createMenuItem($menuItem, $currentRoute);
+                    $menu[] = $finalItem;
                 }
             }
         }
