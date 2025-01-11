@@ -7,9 +7,12 @@ usage() {
 }
 
 watch=""
+export NODE_ENV="development"
 if [ "$#" -ne 0 ]; then
     if [ "$#" -eq 1 -a \( "$1" = "-w" -o "$1" = "--watch" -o "$1" = "watch" \) ]; then
         watch="-w"
+    elif [ "$#" -eq 1 -a \( "$1" = "-p" -o "$1" = "--prod" -o "$1" = "prod" -o "$1" = "--production" -o "$1" = "production" \) ]; then
+        NODE_ENV="production"
     else
         usage
         exit

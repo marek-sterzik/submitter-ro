@@ -1,4 +1,13 @@
 import $ from "jquery"
+import showModalProgress from "./modal-progress.js"
+
+function finishSubmit(url, data)
+{
+    window.history.replaceState({}, "form submit", url)
+    document.open()
+    document.write(data)
+    document.close()
+}
 
 function handleSubmit(event)
 {
@@ -10,25 +19,40 @@ function handleSubmit(event)
     const searchParams = new URLSearchParams(formData);
 
     const fetchOptions = {
-    	method: form.prop("method"),
+    	method: form.prop("method").toUpperCase(),
     };
 
     if (form.prop("method").toLowerCase() === 'post') {
     	if (form.prop("enctype") === 'multipart/form-data') {
     		fetchOptions.body = formData;
+            fetchOptions.mime = 'multipart/form-data'
     	} else {
     		fetchOptions.body = searchParams;
+            fetchOptions.mime = 'application/x-www-form-urlencoded'
     	}
     } else {
     	url.search = searchParams;
     }
 
-    fetch(url, fetchOptions).then((data) => data.text()).then((data) => {
-        window.history.replaceState({}, "form submit", url)
-        document.open()
-        document.write(data)
-        document.close()
-    });
+    var showPercent = false
+
+    setTimeout(() => {showPercent = true}, 1000)
+    
+    const xhr = new XMLHttpRequest();
+    xhr.open(fetchOptions.method, "" + url, true)
+    xhr.upload.onprogress = function (ev) {
+        showModalProgress(showPercent ? (ev.loaded / ev.total) : false)
+    }
+    xhr.onreadystatechange = function() {
+        if (xhr.readyState === XMLHttpRequest.DONE) {
+            showModalProgress(null)
+            if (xhr.status >= 200 && xhr.status < 300) {
+                finishSubmit(url, xhr.responseText)
+            }
+        }
+    }
+
+    xhr.send(fetchOptions.body)
 
     event.preventDefault();
     return false
@@ -45,5 +69,5 @@ $(() => {
         }
         el.find("[required]").removeAttr("required")
     })
-    $("form").bind("submit", handleSubmit)
+    $("form.with-progress").bind("submit", handleSubmit)
 })

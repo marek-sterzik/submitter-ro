@@ -13,7 +13,7 @@ class FileSubmitController extends AbstractController
     #[Route("/submit-file")]
     public function index(Request $request): Response
     {
-        return $this->form(FileSubmitType::class, [])
+        return $this->form(FileSubmitType::class, [], ["attr" => ["class" => "with-progress"]])
         ->action("Uložit", function (array $data) {
             var_dump($data["file"]); die;
             return $this->redirectBack(true);
