@@ -8,10 +8,12 @@ use Symfony\Component\Form\FormInterface;
 use App\Exception\RequestCorrectionException;
 use App\Utility\RequestUtility;
 use App\Utility\Cell;
+use App\Utility\UrlJson;
 
 abstract class AbstractTableController extends AbstractController
 {
     const DEFAULT_ITEMS_PER_PAGE = 15;
+    const FORBIDDEN_FILTER_KEYS = ["p"];
 
     abstract protected function getItemCount(array $filterData): int;
     abstract protected function getHeader(array $filterData): array;
@@ -20,12 +22,12 @@ abstract class AbstractTableController extends AbstractController
     protected function renderTable(): Response
     {
         try {
+            $requestData = $this->getRequestData($this->getRequest());
             $selfLink = $this->createSelfLink();
-            $form = $this->handleForm($selfLink);
+            $form = $this->handleForm($requestData['filterData'], $requestData['defaultFilterData']);
             if ($form instanceof Response) {
                 return $form;
             }
-            $requestData = $this->getRequestData($this->getRequest());
             $itemCount = $this->getItemCount($requestData['filterData']);
             $pageCount = $this->getNumberOfPages($requestData['itemsPerPage'], $itemCount);
             if ($requestData['page'] >= $pageCount) {
@@ -44,14 +46,51 @@ abstract class AbstractTableController extends AbstractController
         }
     }
 
-    private function handleForm(callable $selfLink): FormInterface|Response|null
+    private function handleForm(array $filterData, array $defaultFilterData): FormInterface|Response|null
     {
-        $form = $this->getForm([]);
+        $form = $this->getForm($filterData);
         if ($form === null) {
             return null;
         }
+        $request = $this->getRequest();
+        $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
-            return $this->redirect($selfLink([]));
+            foreach ($form->getData() as $key => $value) {
+                $filterData[$key] = $value;
+            }
+            foreach (array_keys($filterData) as $key) {
+                if (in_array($key, self::FORBIDDEN_FILTER_KEYS)) {
+                    unset($filterData[$key]);
+                }
+            }
+            $allKeys = array_fill_keys(array_keys($filterData), true);
+            foreach (array_keys($filterData) as $key) {
+                if ($filterData[$key] === null) {
+                    unset($filterData[$key]);
+                }
+            }
+            foreach ($defaultFilterData as $key => $value) {
+                if (!isset($allKeys[$key])) {
+                    $allKeys[$key] = true;
+                }
+                if (array_key_exists($key, $filterData)) {
+                    if ($filterData[$key] === $value) {
+                        unset($filterData[$key]);
+                    }
+                } else {
+                    if ($value !== null) {
+                        $filterData[$key] = null;
+                    }
+                }
+            }
+            foreach (array_keys($allKeys) as $key) {
+                if (array_key_exists($key, $filterData)) {
+                    $filterData[$key] = UrlJson::encode($filterData[$key]);
+                } else {
+                    $filterData[$key] = null;
+                }
+            }
+            throw new RequestCorrectionException($request, $filterData);
         }
         return $form;
     }
@@ -61,6 +100,11 @@ abstract class AbstractTableController extends AbstractController
         return null;
     }
 
+    protected function getDefaultFilterData(): array
+    {
+        return [];
+    }
+
     protected function getTemplate(): string
     {
         return "table.html.twig";
@@ -68,17 +112,25 @@ abstract class AbstractTableController extends AbstractController
 
     protected function getRequestData(Request $request): array
     {
+        $defaultFilterData = $this->getDefaultFilterData();
         $requestData = [
             "page" => $this->getPage($request),
             "itemsPerPage" => $this->getItemsPerPage($request),
-            "filterData" => $this->getFilterData($request),
+            "defaultFilterData" => $defaultFilterData,
+            "filterData" => array_merge($defaultFilterData, $this->getFilterData($request)),
         ];
         return $requestData;
     }
 
     protected function getFilterData(Request $request): array
     {
-        return [];
+        $filterData = [];
+        foreach ($request->query->all() as $key => $value) {
+            if (!in_array($key, self::FORBIDDEN_FILTER_KEYS) && is_string($value)) {
+                $filterData[$key] = UrlJson::decode($value);
+            }
+        }
+        return $filterData;
     }
 
     protected function getItemsPerPage(Request $request): int

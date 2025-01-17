@@ -9,17 +9,21 @@ use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Form\Extension\Core\Type\FormType;
+use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 
 class UsersType extends AbstractType
 {
+    const TYPE_ALL = 'all';
+    const TYPE_STUDENTS = 'students';
+    const TYPE_TEACHERS = 'teachers';
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $builder
-            ->add('type', ChoiceType::class, [
+            ->add('t', ChoiceType::class, [
                 'choices' => [
-                    'všichni' => null,
-                    'studenti' => 'students',
-                    'učitelé' => 'teachers',
+                    'všichni' => self::TYPE_ALL,
+                    'studenti' => self::TYPE_STUDENTS,
+                    'učitelé' => self::TYPE_TEACHERS,
                 ],
                 'expanded' => true,
                 'multiple' => false,
@@ -33,12 +37,21 @@ class UsersType extends AbstractType
                 },
                 "label" => false,
             ])
-            ->add('query', TextType::class, [
+            ->add('a', CheckboxType::class, [
+                "required" => false,
+                "label" => "včetně původní role",
+                'attr' => [
+                    "class" => "btn-check",
+                ],
+                'label_attr' => ['class' => 'btn btn-outline-secondary'],
+            ])
+            ->add('q', TextType::class, [
                 "label" => false,
+                "required" => false,
                 "attr" => ["placeholder" => "hledat uživatele...", "class" => "form-control"],
                 "row_attr" => ["class" => "me-2"],
             ])
-            ->add('submit', SubmitType::class, [
+            ->add('s', SubmitType::class, [
                 "label" => "<i class=\"bi bi-search\"></i>",
                 "label_html" => true,
                 "attr" => ["class" => "btn btn-primary"]
@@ -50,7 +63,7 @@ class UsersType extends AbstractType
     {
         $resolver->setDefaults([
             "attr" => [
-                "class" => "btn-toolbar justify-content-center mb-5",
+                "class" => "btn-toolbar justify-content-center mb-3 mt-4",
                 "role" => "toolbar",
             ],
         ]);

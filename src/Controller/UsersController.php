@@ -23,7 +23,31 @@ class UsersController extends AbstractDbTableController
 
     protected function getBaseQueryBuilder(array $filterData): QueryBuilder
     {
-        return $this->getEntityManager()->getRepository(User::class)->createQueryBuilder('u');
+        $qb = $this->getEntityManager()->getRepository(User::class)->createQueryBuilder('u');
+        if ($filterData['t'] === UsersType::TYPE_STUDENTS) {
+            $this->roleQuery($qb, $filterData['a'], ['ROLE_STUDENT']);
+        } elseif ($filterData['t'] === UsersType::TYPE_TEACHERS) {
+            $this->roleQuery($qb, $filterData['a'], ['ROLE_TEACHER', 'ROLE_ADMIN', 'ROLE_SUPERADMIN', 'ROLE_OTHER']);
+        }
+        return $qb;
+    }
+
+    private function roleQuery(QueryBuilder $qb, bool $includeOriginal, array $roles): void
+    {
+        if ($includeOriginal) {
+            $qb->andWhere($qb->expr()->orX(
+                $qb->expr()->in("u.effectiveRole", $roles),
+                $qb->expr()->in("u.originalRole", $roles),
+            ));
+        } else {
+            $qb->andWhere($qb->expr()->orX(
+                $qb->expr()->in("u.effectiveRole", $roles),
+                $qb->expr()->andX(
+                    $qb->expr()->in("u.originalRole", $roles),
+                    $qb->expr()->isNull("u.effectiveRole"),
+                )
+            ));
+        }
     }
 
     protected function getHeader(array $filterData): array
@@ -74,5 +98,13 @@ class UsersController extends AbstractDbTableController
     protected function getForm(array $formData): ?FormInterface
     {
         return $this->createForm(UsersType::class, $formData);
+    }
+
+    protected function getDefaultFilterData(): array
+    {
+        return [
+            "t" => UsersType::TYPE_ALL,
+            "a" => false,
+        ];
     }
 }
