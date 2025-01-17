@@ -50,7 +50,7 @@ class UsersType extends AbstractType
                 "label" => false,
                 "required" => false,
                 "attr" => [
-                    "placeholder" => "hledat uživatele...", 
+                    "placeholder" => "hledat uživatele...",
                     "class" => "form-control"
                 ],
                 "row_attr" => ["class" => "me-2"],

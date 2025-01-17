@@ -15,13 +15,12 @@ class FileSubmitController extends AbstractController
     {
         return $this->form(FileSubmitType::class, [], ["attr" => ["class" => "with-progress"]])
         ->action("Uložit", function (array $data) {
-            var_dump($data["file"]); die;
             return $this->redirectBack(true);
         })
         ->action("Zrušit", function (array $data) {
             return $this->redirectBack(true);
         }, type: 'btn-secondary', validated: false)
         ->handle()
-    ;
+        ;
     }
 }

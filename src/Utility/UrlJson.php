@@ -37,5 +37,4 @@ class UrlJson
         }
         throw new Exception('failed create json');
     }
-
 }
