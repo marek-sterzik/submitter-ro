@@ -4,6 +4,7 @@ namespace App\Controller;
 
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\Form\FormInterface;
 use App\Exception\RequestCorrectionException;
 use App\Utility\RequestUtility;
 use App\Utility\Cell;
@@ -19,6 +20,11 @@ abstract class AbstractTableController extends AbstractController
     protected function renderTable(): Response
     {
         try {
+            $selfLink = $this->createSelfLink();
+            $form = $this->handleForm($selfLink);
+            if ($form instanceof Response) {
+                return $form;
+            }
             $requestData = $this->getRequestData($this->getRequest());
             $itemCount = $this->getItemCount($requestData['filterData']);
             $pageCount = $this->getNumberOfPages($requestData['itemsPerPage'], $itemCount);
@@ -27,15 +33,32 @@ abstract class AbstractTableController extends AbstractController
             }
             $header = $this->getHeader($requestData['filterData']);
             $data = $this->getData($requestData['page'], $requestData['itemsPerPage'], $requestData['filterData']);
-            $selfLink = $this->createSelfLink();
             $table = $this->createTable($header, $data, $pageCount, $requestData['page'], $selfLink);
             return $this->render($this->getTemplate(), [
                 "table" => $table,
                 "self" => $selfLink,
+                "form" => $form,
             ]);
         } catch (RequestCorrectionException $e) {
             return $e->getRedirectResponse();
         }
+    }
+
+    private function handleForm(callable $selfLink): FormInterface|Response|null
+    {
+        $form = $this->getForm([]);
+        if ($form === null) {
+            return null;
+        }
+        if ($form->isSubmitted() && $form->isValid()) {
+            return $this->redirect($selfLink([]));
+        }
+        return $form;
+    }
+
+    protected function getForm(array $formData): ?FormInterface
+    {
+        return null;
     }
 
     protected function getTemplate(): string

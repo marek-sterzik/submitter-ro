@@ -5,10 +5,12 @@ namespace App\Controller;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Security\Http\Attribute\IsGranted;
+use Symfony\Component\Form\FormInterface;
 use Doctrine\ORM\QueryBuilder;
 use App\Entity\User;
 use App\Utility\Cell;
 use App\Utility\Action;
+use App\Form\Filter\UsersType;
 
 class UsersController extends AbstractDbTableController
 {
@@ -67,5 +69,10 @@ class UsersController extends AbstractDbTableController
             ));
         }
         return $actions;
+    }
+
+    protected function getForm(array $formData): ?FormInterface
+    {
+        return $this->createForm(UsersType::class, $formData);
     }
 }
