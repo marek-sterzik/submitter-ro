@@ -28,7 +28,7 @@ class UsersType extends AbstractType
                 'expanded' => true,
                 'multiple' => false,
                 'attr' => [
-                    "class" => "btn-group me-2",
+                    "class" => "btn-group me-2 autosubmit",
                     "role" => "group",
                 ],
                 'label_attr' => ['class' => 'btn btn-outline-dark'],
@@ -41,14 +41,18 @@ class UsersType extends AbstractType
                 "required" => false,
                 "label" => "včetně původní role",
                 'attr' => [
-                    "class" => "btn-check",
+                    "class" => "btn-check autosubmit",
                 ],
+                "row_attr" => ["class" => "me-2"],
                 'label_attr' => ['class' => 'btn btn-outline-secondary'],
             ])
             ->add('q', TextType::class, [
                 "label" => false,
                 "required" => false,
-                "attr" => ["placeholder" => "hledat uživatele...", "class" => "form-control"],
+                "attr" => [
+                    "placeholder" => "hledat uživatele...", 
+                    "class" => "form-control"
+                ],
                 "row_attr" => ["class" => "me-2"],
             ])
             ->add('s', SubmitType::class, [

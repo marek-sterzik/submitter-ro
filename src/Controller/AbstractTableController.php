@@ -90,6 +90,7 @@ abstract class AbstractTableController extends AbstractController
                     $filterData[$key] = null;
                 }
             }
+            $filterData['p'] = null;
             throw new RequestCorrectionException($request, $filterData);
         }
         return $form;

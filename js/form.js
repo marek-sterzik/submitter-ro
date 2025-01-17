@@ -58,16 +58,40 @@ function handleSubmit(event)
     return false
 }
 
+function findParentForm(el)
+{
+    while (el.length > 0 && el.prop("tagName").toLowerCase() != "form") {
+        el = el.parent()
+    }
+    if (el.length == 0) {
+        return null
+    }
+    return el
+}
+
+function autosubmit()
+{
+    const form = findParentForm($(this))
+    if (form === null) {
+        return
+    }
+    form.submit()
+}
+
 $(() => {
     $(".non-validated-action").click(function (ev){
-        var el = $(this)
-        while (el.length > 0 && el.prop("tagName").toLowerCase() != "form") {
-            el = el.parent()
-        }
-        if (el.length == 0) {
+        const el = findParentForm($(this))
+        if (el === null) {
             return
         }
         el.find("[required]").removeAttr("required")
     })
     $("form.with-progress").bind("submit", handleSubmit)
+    $(".autosubmit").each(function(){
+        const el = $(this)
+        el.find("input").bind("change", autosubmit)
+        if (el.is("input")) {
+            el.bind("change", autosubmit)
+        }
+    })
 })
