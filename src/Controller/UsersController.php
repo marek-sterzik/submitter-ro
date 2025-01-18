@@ -10,6 +10,7 @@ use Doctrine\ORM\QueryBuilder;
 use App\Entity\User;
 use App\Utility\Cell;
 use App\Utility\Action;
+use App\Utility\SearchTool;
 use App\Form\Filter\UsersType;
 
 class UsersController extends AbstractDbTableController
@@ -29,6 +30,21 @@ class UsersController extends AbstractDbTableController
         } elseif ($filterData['t'] === UsersType::TYPE_TEACHERS) {
             $this->roleQuery($qb, $filterData['a'], ['ROLE_TEACHER', 'ROLE_ADMIN', 'ROLE_SUPERADMIN', 'ROLE_OTHER']);
         }
+        $searchTool = new SearchTool();
+        $searchTool->handle(null, function(QueryBuilder $qb, string $string, ?string $type, string $var) {
+            $qb->andWhere($qb->expr()->orX(
+                $qb->expr()->like("u.username", ":${var}"),
+                $qb->expr()->like("u.name", ":${var}"),
+                $qb->expr()->like("u.effectiveStudentClass", ":${var}_start"),
+                $qb->expr()->andX(
+                    $qb->expr()->isNull("u.effectiveStudentClass"),
+                    $qb->expr()->like("u.originalStudentClass", ":${var}_start"),
+                )
+            ));
+            $qb->setParameter(":${var}", "%$string%");
+            $qb->setParameter(":${var}_start", "$string%");
+        });
+        $searchTool->search($qb, $filterData['q'] ?? '');
         return $qb;
     }
 
