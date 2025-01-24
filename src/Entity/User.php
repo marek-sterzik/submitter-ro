@@ -3,6 +3,8 @@
 namespace App\Entity;
 
 use DateTimeImmutable;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use App\Repository\UserRepository;
 use App\Utility\RoleComparator;
@@ -52,9 +54,16 @@ class User
     #[ORM\Column(nullable: true)]
     private ?DateTimeImmutable $lastLoginAt;
 
+    /**
+     * @var Collection<int, Assignment>
+     */
+    #[ORM\OneToMany(targetEntity: Assignment::class, mappedBy: 'owner')]
+    private Collection $ownedAssignments;
+
     public function __construct(string $username)
     {
         $this->username = $username;
+        $this->ownedAssignments = new ArrayCollection();
     }
 
     public function getId(): int
@@ -199,6 +208,36 @@ class User
             }
             $this->restorableRole = null;
         }
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Assignment>
+     */
+    public function getOwnedAssignments(): Collection
+    {
+        return $this->ownedAssignments;
+    }
+
+    public function addOwnedAssignment(Assignment $ownedAssignment): static
+    {
+        if (!$this->ownedAssignments->contains($ownedAssignment)) {
+            $this->ownedAssignments->add($ownedAssignment);
+            $ownedAssignment->setOwner($this);
+        }
+
+        return $this;
+    }
+
+    public function removeOwnedAssignment(Assignment $ownedAssignment): static
+    {
+        if ($this->ownedAssignments->removeElement($ownedAssignment)) {
+            // set the owning side to null (unless already changed)
+            if ($ownedAssignment->getOwner() === $this) {
+                $ownedAssignment->setOwner(null);
+            }
+        }
+
         return $this;
     }
 }
