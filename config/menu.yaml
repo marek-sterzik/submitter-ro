@@ -2,6 +2,9 @@ menu:
   - name: domů
     route: main
     roles: ['PUBLIC_ACCESS']
+  - name: zadání
+    route: assignments
+    roles: ['ROLE_ADMIN']
   - name: uživatelé
     route: users
     routes: ["user"]
