@@ -15,7 +15,7 @@ use App\Form\Filter\AssignmentsType;
 
 class AssignmentsController extends AbstractDbTableController
 {
-    #[IsGranted('ROLE_ADMIN')]
+    #[IsGranted('ROLE_TEACHER')]
     #[Route("/assignments", name: "assignments")]
     public function index(): Response
     {
@@ -24,16 +24,25 @@ class AssignmentsController extends AbstractDbTableController
 
     protected function getBaseQueryBuilder(array $filterData): QueryBuilder
     {
+        $adminView = $this->isGranted("ROLE_ADMIN");
+        $me = $this->getUser()->getUserData();
         $qb = $this->getEntityManager()->getRepository(Assignment::class)->createQueryBuilder('a');
         if ($filterData['a']) {
-            $qb->andWhere($qb->expr()->orX(
-                $qb->expr()->eq("a.owner", ":owner"),
-                $qb->expr()->eq("a.published", true),
-            ));
+            if (!$adminView) {
+                $qb->andWhere($qb->expr()->orX(
+                    $qb->expr()->eq("a.owner", ":owner"),
+                    $qb->expr()->andX(
+                        $qb->expr()->eq("a.published", true),
+                        $qb->expr()->eq("a.public", true),
+                    )
+                ));
+                $qb->setParameter(":owner", $me);
+            }
         } else {
             $qb->andWhere("a.owner = :owner");
+            $qb->setParameter(":owner", $me);
+
         }
-        $qb->setParameter(":owner", $this->getUser()->getUserData());
         $searchTool = new SearchTool();
         $searchTool->handle(null, function(QueryBuilder $qb, string $string, ?string $type, string $var) {
             $qb->andWhere($qb->expr()->orX(
