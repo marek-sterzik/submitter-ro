@@ -11,7 +11,7 @@ use App\Entity\Assignment;
 use App\Utility\Cell;
 use App\Utility\Action;
 use App\Utility\SearchTool;
-use App\Form\Filter\UsersType;
+use App\Form\Filter\AssignmentsType;
 
 class AssignmentsController extends AbstractDbTableController
 {
@@ -25,6 +25,24 @@ class AssignmentsController extends AbstractDbTableController
     protected function getBaseQueryBuilder(array $filterData): QueryBuilder
     {
         $qb = $this->getEntityManager()->getRepository(Assignment::class)->createQueryBuilder('a');
+        if ($filterData['a']) {
+            $qb->andWhere($qb->expr()->orX(
+                $qb->expr()->eq("a.owner", ":owner"),
+                $qb->expr()->eq("a.published", true),
+            ));
+        } else {
+            $qb->andWhere("a.owner = :owner");
+        }
+        $qb->setParameter(":owner", $this->getUser()->getUserData());
+        $searchTool = new SearchTool();
+        $searchTool->handle(null, function(QueryBuilder $qb, string $string, ?string $type, string $var) {
+            $qb->andWhere($qb->expr()->orX(
+                $qb->expr()->like("a.caption", ":${var}"),
+                $qb->expr()->like("a.description", ":${var}"),
+            ));
+            $qb->setParameter(":${var}", "%$string%");
+        });
+        $searchTool->search($qb, $filterData['q'] ?? '');
         return $qb;
     }
 
@@ -70,11 +88,13 @@ class AssignmentsController extends AbstractDbTableController
 
     protected function getForm(array $formData): ?FormInterface
     {
-        return null;
+        return $this->createForm(AssignmentsType::class, $formData);
     }
 
     protected function getDefaultFilterData(): array
     {
-        return [];
+        return [
+            "a" => false,
+        ];
     }
 }
