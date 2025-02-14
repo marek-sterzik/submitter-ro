@@ -218,26 +218,4 @@ class User
     {
         return $this->ownedAssignments;
     }
-
-    public function addOwnedAssignment(Assignment $ownedAssignment): static
-    {
-        if (!$this->ownedAssignments->contains($ownedAssignment)) {
-            $this->ownedAssignments->add($ownedAssignment);
-            $ownedAssignment->setOwner($this);
-        }
-
-        return $this;
-    }
-
-    public function removeOwnedAssignment(Assignment $ownedAssignment): static
-    {
-        if ($this->ownedAssignments->removeElement($ownedAssignment)) {
-            // set the owning side to null (unless already changed)
-            if ($ownedAssignment->getOwner() === $this) {
-                $ownedAssignment->setOwner(null);
-            }
-        }
-
-        return $this;
-    }
 }

@@ -41,10 +41,9 @@ class AssignmentsController extends AbstractDbTableController
         } else {
             $qb->andWhere("a.owner = :owner");
             $qb->setParameter(":owner", $me);
-
         }
         $searchTool = new SearchTool();
-        $searchTool->handle(null, function(QueryBuilder $qb, string $string, ?string $type, string $var) {
+        $searchTool->handle(null, function (QueryBuilder $qb, string $string, ?string $type, string $var) {
             $qb->andWhere($qb->expr()->orX(
                 $qb->expr()->like("a.caption", ":${var}"),
                 $qb->expr()->like("a.description", ":${var}"),

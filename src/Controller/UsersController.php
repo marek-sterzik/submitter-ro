@@ -31,7 +31,7 @@ class UsersController extends AbstractDbTableController
             $this->roleQuery($qb, $filterData['a'], ['ROLE_TEACHER', 'ROLE_ADMIN', 'ROLE_SUPERADMIN', 'ROLE_OTHER']);
         }
         $searchTool = new SearchTool();
-        $searchTool->handle(null, function(QueryBuilder $qb, string $string, ?string $type, string $var) {
+        $searchTool->handle(null, function (QueryBuilder $qb, string $string, ?string $type, string $var) {
             $qb->andWhere($qb->expr()->orX(
                 $qb->expr()->like("u.username", ":${var}"),
                 $qb->expr()->like("u.name", ":${var}"),
